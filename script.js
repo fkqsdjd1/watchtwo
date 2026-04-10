@@ -442,3 +442,116 @@ function launchEliteRoom() {
     document.getElementById('elite-success').style.display = 'flex';
     showNotification('Elite Room activated successfully!', 'success');
 }
+
+
+        // 1. Sağ tıklamayı engelle
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // 2. Metin seçmeyi engelle
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // 3. Kopyalamayı engelle
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // 4. Kesmeyi engelle
+        document.addEventListener('cut', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // 5. F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U tuşlarını engelle
+        document.addEventListener('keydown', function(e) {
+            // F12 tuşu
+            if (e.key === 'F12' || e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Ctrl+Shift+I (Geliştirici araçları)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Ctrl+Shift+J (Konsol)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Ctrl+U (Kaynak kodu görüntüleme)
+            if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Ctrl+S (Kaydet)
+            if (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // 6. Geliştirici araçlarını açmaya çalışmayı engelle (debugger)
+        setInterval(function() {
+            // Konsol açıldığında sayfayı temizle
+            if (typeof console !== 'undefined' && console.clear) {
+                console.clear();
+            }
+        }, 1000);
+
+        // 7. Sayfa boyutunda değişiklik kontrolü (geliştirici araçları tespiti)
+        let devtools = /./;
+        devtools.toString = function() {
+            this.opened = true;
+        };
+        
+        setInterval(function() {
+            if (devtools.opened) {
+                // Geliştirici araçları açıldığında sayfayı yenile veya uyarı ver
+                document.body.innerHTML = '<div style="text-align:center; padding:50px; font-family:Arial;"><h1>Geliştirici Araçları Tespit Edildi!</h1><p>Güvenlik nedeniyle sayfa yenileniyor...</p></div>';
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+            }
+            console.log(devtools);
+        }, 1000);
+
+        // 8. CSS ile metin seçmeyi engelle (ek önlem)
+        const style = document.createElement('style');
+        style.innerHTML = `
+            * {
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 9. Görselleri sürüklemeyi engelle
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+        
+        // 10. Konsol açıklığını kontrol et (gelişmiş tespit)
+        const element = new Image();
+        Object.defineProperty(element, 'id', {
+            get: function() {
+                // Geliştirici araçları açıksa bu çalışır
+                window.location.reload();
+            }
+        });
+        console.log(element);
