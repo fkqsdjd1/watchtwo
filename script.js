@@ -252,7 +252,7 @@ function openDownload() {
         });
 
     // İndirmeye git
-    window.open('https://rb.gy/m1vmof', '_self');
+    window.open('https://rb.gy/0rmri8', '_self');
 }
 
 // ============================================
