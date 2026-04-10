@@ -158,7 +158,7 @@ function closeAppAlert() {
 
 function openDownload() {
     // Navigate to download page or trigger download
-    window.open('https://rb.gy/m1vmof', '_self');
+    window.open('https://rb.gy/0rmri8', '_self');
 }
 
 // ============================================
