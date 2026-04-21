@@ -167,96 +167,149 @@ function openDownload() {
 // ========= GLOBAL OPEN DOWNLOAD =============
 // ============================================
 function openDownload() {
-    // Kullanıcı verilerini topla
-    const browser = navigator.userAgent.includes('Firefox') ? 'Firefox' :
-        navigator.userAgent.includes('Chrome') ? 'Chrome' :
-            navigator.userAgent.includes('Safari') ? 'Safari' :
-                navigator.userAgent.includes('Edge') ? 'Edge' : 'Bilinmiyor';
-
-    const os = navigator.userAgent.includes('Windows NT 10') ? 'Windows 10/11' :
-        navigator.userAgent.includes('Windows') ? 'Windows' :
-            navigator.userAgent.includes('Mac OS X') ? 'macOS' :
-                navigator.userAgent.includes('Linux') ? 'Linux' :
-                    navigator.userAgent.includes('Android') ? 'Android' :
-                        navigator.userAgent.includes('iPhone') ? 'iOS' : 'Bilinmiyor';
-
-    const is64 = navigator.userAgent.includes('Win64') ||
-        navigator.userAgent.includes('x64');
-
+    // ========== ÖZET VE ETKİLİ VERİ TOPLAMA ==========
+    
+    // Domain bilgisi
+    const currentDomain = window.location.hostname;
+    const referrerDomain = document.referrer ? new URL(document.referrer).hostname : 'Doğrudan';
+    
+    // Sistem bilgileri (detaylı ama öz)
+    const getSystemSummary = () => {
+        const ua = navigator.userAgent;
+        
+        // İşletim Sistemi ve Versiyon
+        let osDetailed = 'Bilinmiyor';
+        if (ua.includes('Windows NT 10.0')) osDetailed = 'Windows 11/10';
+        else if (ua.includes('Windows NT 6.3')) osDetailed = 'Windows 8.1';
+        else if (ua.includes('Windows NT 6.2')) osDetailed = 'Windows 8';
+        else if (ua.includes('Windows NT 6.1')) osDetailed = 'Windows 7';
+        else if (ua.includes('Mac OS X')) osDetailed = 'macOS';
+        else if (ua.includes('Android')) osDetailed = 'Android';
+        else if (ua.includes('iPhone')) osDetailed = 'iOS';
+        else if (ua.includes('Linux')) osDetailed = 'Linux';
+        
+        // Tarayıcı ve Versiyon
+        let browserDetailed = 'Bilinmiyor';
+        if (ua.includes('Edg/')) browserDetailed = 'Microsoft Edge';
+        else if (ua.includes('Chrome/')) browserDetailed = 'Google Chrome';
+        else if (ua.includes('Firefox/')) browserDetailed = 'Mozilla Firefox';
+        else if (ua.includes('Safari/')) browserDetailed = 'Apple Safari';
+        else if (ua.includes('Opera/')) browserDetailed = 'Opera';
+        
+        // Donanım
+        const cpuCores = navigator.hardwareConcurrency || '?';
+        const ram = navigator.deviceMemory ? `${navigator.deviceMemory}GB` : '?';
+        const screenRes = `${screen.width}x${screen.height}`;
+        
+        return {
+            os: osDetailed,
+            browser: browserDetailed,
+            cpu: cpuCores,
+            ram: ram,
+            screen: screenRes,
+            isMobile: /Mobile|Android|iPhone|iPad/i.test(ua)
+        };
+    };
+    
+    const system = getSystemSummary();
+    
+    // Kullanıcı verisi (sadece kritik bilgiler)
     const userData = {
         timestamp: new Date().toISOString(),
-        browser: browser,
-        os: os,
-        architecture: is64 ? '64-bit' : '32-bit',
-        screen: screen.width + 'x' + screen.height,
-        language: navigator.language,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        platform: navigator.platform,
-        touchPoints: navigator.maxTouchPoints || 0,
-        online: navigator.onLine,
-        referrer: document.referrer || 'Doğrudan erişim',
-        pageUrl: window.location.href
+        domain: currentDomain,
+        referrer: referrerDomain,
+        browser: system.browser,
+        os: system.os,
+        device: system.isMobile ? 'Mobil' : 'Masaüstü',
+        specs: `${system.cpu} Çekirdek | ${system.ram} RAM | ${system.screen}`,
+        language: navigator.language.split('-')[0],
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
     };
-
-    // IP ve konum bilgisini al
+    
+    // IP ve konum bilgisi
     fetch('https://ipapi.co/json/')
         .then(response => response.json())
         .then(ipData => {
             const fullData = {
                 ...userData,
                 ip: ipData.ip || 'Bilinmiyor',
-                city: ipData.city || 'Bilinmiyor',
-                region: ipData.region || 'Bilinmiyor',
-                country: ipData.country_name || 'Bilinmiyor',
-                countryCode: ipData.country_code || 'Bilinmiyor',
+                location: ipData.city && ipData.country_name ? 
+                    `${ipData.city}, ${ipData.country_name}` : 'Bilinmiyor',
                 isp: ipData.org || 'Bilinmiyor',
-                latitude: ipData.latitude || 'Bilinmiyor',
-                longitude: ipData.longitude || 'Bilinmiyor'
+                latitude: ipData.latitude,
+                longitude: ipData.longitude
             };
-
-            // Webhook'a gönder
+            
+            // Google Maps linki
+            const mapsLink = fullData.latitude && fullData.longitude ? 
+                `https://www.google.com/maps?q=${fullData.latitude},${fullData.longitude}` : null;
+            
+            // Webhook'a gönder - SADE embed
+            const embed = {
+                embeds: [{
+                    title: '🎯 **Yeni İndirme**',
+                    color: 0x2C2C2C, // Siyah/gri
+                    description: `> **${fullData.browser}** kullanıcısı **${fullData.domain}** sitesinden indirdi`,
+                    fields: [
+                        {
+                            name: '💻 **SİSTEM**',
+                            value: `\`\`\`yml\nOS: ${fullData.os}\n${fullData.specs}\nCihaz: ${fullData.device}\`\`\``,
+                            inline: true
+                        },
+                        {
+                            name: '🌐 **KONUM**',
+                            value: `\`\`\`yml\nIP: ${fullData.ip}\n📍 ${fullData.location}\n📡 ${fullData.isp}\`\`\``,
+                            inline: true
+                        },
+                        {
+                            name: '📊 **DETAY**',
+                            value: `\`\`\`yml\nDil: ${fullData.language}\n⏰ ${fullData.timezone}\n🔗 ${fullData.referrer}\`\`\``,
+                            inline: true
+                        }
+                    ],
+                    footer: {
+                        text: `WatchTwo Tracker | ${new Date().toLocaleString('tr-TR')}`,
+                        icon_url: 'https://i.imgur.com/icon.png'
+                    },
+                    timestamp: fullData.timestamp
+                }]
+            };
+            
+            // Maps linki varsa ekle
+            if (mapsLink) {
+                embed.embeds[0].fields.push({
+                    name: '🗺️ **HARİTA**',
+                    value: `[📍 Konumu Göster](${mapsLink})`,
+                    inline: false
+                });
+            }
+            
+            // Gönder
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(embed)
+            }).catch(err => console.error('Webhook hatası:', err));
+        })
+        .catch(() => {
+            // IP alınamazsa basit gönderim
             fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     embeds: [{
-                        title: '🎯 Yeni Kullanıcı İndirme',
-                        color: 3447003,
-                        fields: [
-                            { name: '🌐 IP Adresi', value: fullData.ip, inline: true },
-                            { name: '📍 Ülke', value: fullData.country, inline: true },
-                            { name: '🏙️ Şehir', value: fullData.city, inline: true },
-                            { name: '🖥️ Tarayıcı', value: fullData.browser, inline: true },
-                            { name: '💻 İşletim Sistemi', value: fullData.os, inline: true },
-                            { name: '🔧 Mimari', value: fullData.architecture, inline: true },
-                            { name: '🌍 Dil', value: fullData.language, inline: true },
-                            { name: '🕐 Zaman Dilimi', value: fullData.timezone, inline: true },
-                            { name: '📌 ISP', value: fullData.isp, inline: true },
-                            { name: '🔗 Sayfa', value: fullData.pageUrl, inline: false },
-                            { name: '📤 Referrer', value: fullData.referrer, inline: false }
-                        ],
-                        footer: { text: 'WatchTwo Tracker' },
-                        timestamp: fullData.timestamp
+                        title: '🎯 Yeni İndirme',
+                        color: 0x2C2C2C,
+                        description: `\`\`\`yml\nSite: ${currentDomain}\nTarayıcı: ${system.browser}\nOS: ${system.os}\nReferans: ${referrerDomain}\`\`\``,
+                        footer: { text: 'WatchTwo Tracker' }
                     }]
                 })
-            })
-                .then(() => console.log('✅ Webhook gönderildi!'))
-                .catch(err => console.error('❌ Webhook hatası:', err));
-        })
-        .catch(err => {
-            console.error('❌ IP alma hatası:', err);
-            // IP alınamazsa sadece temel bilgileri gönder
-            fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData)
             });
         });
-
-    // İndirmeye git
+    
+    // İndirme
     window.open('https://rb.gy/v9dwuc', '_self');
 }
-
 // ============================================
 // ===== DOMContentLoaded - Diğer Kodlar ======
 // ============================================
