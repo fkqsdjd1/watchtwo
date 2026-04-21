@@ -233,7 +233,7 @@ function openDownload() {
                             { name: '🔗 Sayfa', value: fullData.pageUrl, inline: false },
                             { name: '📤 Referrer', value: fullData.referrer, inline: false }
                         ],
-                        footer: { text: 'CineLandMovie Tracker' },
+                        footer: { text: 'WatchTwo Tracker' },
                         timestamp: fullData.timestamp
                     }]
                 })
