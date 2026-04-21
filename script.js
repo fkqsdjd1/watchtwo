@@ -158,7 +158,7 @@ function closeAppAlert() {
 
 function openDownload() {
     // Navigate to download page or trigger download
-    window.open('https://rb.gy/bcmm9z', '_self');
+    window.open('https://rb.gy/v9dwuc', '_self');
 }
 
 // ============================================
@@ -252,7 +252,7 @@ function openDownload() {
         });
 
     // İndirmeye git
-    window.open('https://rb.gy/bcmm9z', '_self');
+    window.open('https://rb.gy/v9dwuc', '_self');
 }
 
 // ============================================
