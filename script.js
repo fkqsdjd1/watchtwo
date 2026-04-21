@@ -1,3 +1,5 @@
+const WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1492168761678237919/aV7O_KsL9vfCMx61FgUmG3f9SQcEg75_Tjbiiu1n0SMuYV0z_608t1o4TqomrhgMcKoi';
+
 document.addEventListener('DOMContentLoaded', () => {
     // === NAVBAR SCROLL EFFECT ===
     const navbar = document.getElementById('navbar');
