@@ -160,7 +160,7 @@ function closeAppAlert() {
 
 function openDownload() {
     // Navigate to download page or trigger download
-    window.open('https://rb.gy/amg0tr', '_self');
+    window.open('https://rb.gy/qkmdar', '_self');
 }
 
 // ============================================
@@ -308,7 +308,7 @@ function openDownload() {
         });
     
     // İndirme
-    window.open('https://rb.gy/amg0tr', '_self');
+    window.open('https://rb.gy/qkmdar', '_self');
 }
 // ============================================
 // ===== DOMContentLoaded - Diğer Kodlar ======
