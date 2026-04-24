@@ -386,8 +386,8 @@ function showNotification(message, type = 'info') {
 // === LEGAL MODAL LOGIC ===
 const legalContent = {
     about: {
-        title: "About CineLandMovie",
-        body: "CineLandMovie is the ultimate social platform for streaming and hanging out. We bring people together through the power of cinema, allowing you to watch your favorite content with friends in real-time, no matter where they are. Join the evolution of social streaming."
+        title: "About WatchTwo",
+        body: "WatchTwo is the ultimate social platform for streaming and hanging out. We bring people together through the power of cinema, allowing you to watch your favorite content with friends in real-time, no matter where they are. Join the evolution of social streaming."
     },
     privacy: {
         title: "Privacy Policy",
@@ -395,7 +395,7 @@ const legalContent = {
     },
     terms: {
         title: "Terms of Service",
-        body: "By using CineLandMovie, you agree to respect our community guidelines. Harassment, hate speech, and illegal content sharing are strictly prohibited. We reserve the right to suspend accounts that violate these terms to maintain a safe environment for everyone."
+        body: "By using WatchTwo, you agree to respect our community guidelines. Harassment, hate speech, and illegal content sharing are strictly prohibited. We reserve the right to suspend accounts that violate these terms to maintain a safe environment for everyone."
     }
 };
 
